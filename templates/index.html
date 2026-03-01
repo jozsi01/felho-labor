@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Fotógaléria</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .upload-form { background: #f0f0f0; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+        .photo-list { list-style: none; padding: 0; }
+        .photo-item { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .sort-links { margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <h1>Fotógaléria - Minimál verzió</h1>
+
+    <div class="upload-form">
+        <h3>Új kép feltöltése</h3>
+        <form action="/" method="POST" enctype="multipart/form-data">
+            <label>Kép neve (max 40 kar.):</label>
+            <input type="text" name="name" maxlength="40" required>
+            <br><br>
+            <label>Fájl:</label>
+            <input type="file" name="file" accept="image/*" required>
+            <br><br>
+            <button type="submit">Feltöltés</button>
+        </form>
+    </div>
+
+    <div class="sort-links">
+        <strong>Rendezés:</strong> 
+        <a href="/?sort=name_asc">Név (A-Z)</a> | 
+        <a href="/?sort=name_desc">Név (Z-A)</a> | 
+        <a href="/?sort=date_desc">Legújabb elöl</a> | 
+        <a href="/?sort=date_asc">Legrégebbi elöl</a>
+    </div>
+
+    <ul class="photo-list">
+        {% for photo in photos %}
+        <li class="photo-item">
+            <div>
+                <strong><a href="{{ url_for('view_photo', id=photo.id) }}">{{ photo.name }}</a></strong> <br>
+                <small>Feltöltve: {{ photo.upload_date.strftime('%Y-%m-%d %H:%M') }}</small>
+            </div>
+            <div>
+                <form action="{{ url_for('delete_photo', id=photo.id) }}" method="POST" onsubmit="return confirm('Biztosan törlöd?');">
+                    <button type="submit" style="color: red;">Törlés</button>
+                </form>
+            </div>
+        </li>
+        {% else %}
+        <li>Nincsenek feltöltött képek.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
