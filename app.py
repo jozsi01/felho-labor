@@ -26,20 +26,18 @@ login_manager.login_view = 'login' # Ide irányít, ha bejelentkezés köteles o
 login_manager.login_message = "Kérlek, jelentkezz be az oldal megtekintéséhez."
 
 # --- ADATBÁZIS MODELLEK ---
-
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
-    password_hash = db.Column(db.String(128), nullable=False)
-    # Kapcsolat a képekkel
+    # Növeld meg 128-ról 256-ra vagy Text-re
+    password_hash = db.Column(db.String(256), nullable=False) 
     photos = db.relationship('Photo', backref='uploader', lazy=True)
 
 class Photo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(40), nullable=False)
-    filename = db.Column(db.String(120), nullable=False)
-    upload_date = db.Column(db.DateTime, default=datetime.now)
-    # Külső kulcs: melyik felhasználó töltötte fel
+    name = db.Column(db.String(100), nullable=False) # Ezt is érdemes növelni
+    filename = db.Column(db.String(255), nullable=False) # 120-ról 255-re
+    upload_date = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 with app.app_context():
