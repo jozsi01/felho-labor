@@ -5,34 +5,55 @@
     <title>Fotógaléria</title>
     <style>
         body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-        .upload-form { background: #f0f0f0; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+        .nav { background: #333; color: white; padding: 10px; border-radius: 5px; margin-bottom: 20px; display: flex; justify-content: space-between;}
+        .nav a { color: white; text-decoration: none; margin-right: 15px; }
+        .upload-form, .auth-form { background: #f0f0f0; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
         .photo-list { list-style: none; padding: 0; }
         .photo-item { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .sort-links { margin-bottom: 15px; }
+        .flash { background: #ffdddd; color: #d8000c; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
+    <div class="nav">
+        <div>
+            <a href="{{ url_for('index') }}">Kezdőlap</a>
+        </div>
+        <div>
+            {% if current_user.is_authenticated %}
+                <span>Szia, {{ current_user.username }}!</span>
+                <a href="{{ url_for('logout') }}" style="margin-left: 15px;">Kijelentkezés</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Bejelentkezés</a>
+                <a href="{{ url_for('register') }}">Regisztráció</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
     <h1>Fotógaléria</h1>
 
+    {% if current_user.is_authenticated %}
     <div class="upload-form">
         <h3>Új kép feltöltése</h3>
         <form action="/" method="POST" enctype="multipart/form-data">
             <label>Kép neve (max 40 kar.):</label>
             <input type="text" name="name" maxlength="40" required>
-            <br><br>
-            <label>Fájl:</label>
             <input type="file" name="file" accept="image/*" required>
-            <br><br>
             <button type="submit">Feltöltés</button>
         </form>
     </div>
+    {% endif %}
 
-    <div class="sort-links">
+    <div>
         <strong>Rendezés:</strong> 
-        <a href="/?sort=name_asc">Név (A-Z)</a> | 
-        <a href="/?sort=name_desc">Név (Z-A)</a> | 
-        <a href="/?sort=date_desc">Legújabb elöl</a> | 
-        <a href="/?sort=date_asc">Legrégebbi elöl</a>
+        <a href="/?sort=name_asc">Név (A-Z)</a> | <a href="/?sort=date_desc">Legújabb</a>
     </div>
 
     <ul class="photo-list">
@@ -40,13 +61,16 @@
         <li class="photo-item">
             <div>
                 <strong><a href="{{ url_for('view_photo', id=photo.id) }}">{{ photo.name }}</a></strong> <br>
-                <small>Feltöltve: {{ photo.upload_date.strftime('%Y-%m-%d %H:%M') }}</small>
+                <small>Feltöltötte: {{ photo.uploader.username }} | {{ photo.upload_date.strftime('%Y-%m-%d %H:%M') }}</small>
             </div>
+            
+            {% if current_user.is_authenticated and current_user.id == photo.user_id %}
             <div>
                 <form action="{{ url_for('delete_photo', id=photo.id) }}" method="POST" onsubmit="return confirm('Biztosan törlöd?');">
                     <button type="submit" style="color: red;">Törlés</button>
                 </form>
             </div>
+            {% endif %}
         </li>
         {% else %}
         <li>Nincsenek feltöltött képek.</li>
