@@ -12,7 +12,10 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'titkos-kulcs-ide' # Ez a munkamenetek (session) biztonságához kell
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///photos.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
+    "DATABASE_URL",
+    "postgresql://flaskuser:password@localhost/photos"
+)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
