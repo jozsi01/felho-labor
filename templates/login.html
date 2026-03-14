@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Bejelentkezés</title>
+</head>
+<body style="font-family: Arial; max-width: 400px; margin: 50px auto;">
+    <h2>Bejelentkezés</h2>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}<div style="color: red; margin-bottom:10px;">{{ message }}</div>{% endfor %}
+      {% endif %}
+    {% endwith %}
+    <form method="POST">
+        <p><input type="text" name="username" placeholder="Felhasználónév" required></p>
+        <p><input type="password" name="password" placeholder="Jelszó" required></p>
+        <button type="submit">Belépés</button>
+    </form>
+    <p><a href="{{ url_for('index') }}">Vissza a főoldalra</a></p>
+</body>
+</html>
