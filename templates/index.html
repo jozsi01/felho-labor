@@ -10,6 +10,8 @@
         .upload-form, .auth-form { background: #f0f0f0; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
         .photo-list { list-style: none; padding: 0; }
         .photo-item { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .photo-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; margin-right: 12px; }
+        .photo-info { display: flex; align-items: center; }
         .flash { background: #ffdddd; color: #d8000c; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
     </style>
 </head>
@@ -59,9 +61,15 @@
     <ul class="photo-list">
         {% for photo in photos %}
         <li class="photo-item">
-            <div>
-                <strong><a href="{{ url_for('view_photo', id=photo.id) }}">{{ photo.name }}</a></strong> <br>
-                <small>Feltöltötte: {{ photo.uploader.username }} | {{ photo.upload_date.strftime('%Y-%m-%d %H:%M') }}</small>
+            <div class="photo-info">
+                <!-- ÚJ: bélyegkép közvetlenül az adatbázisból -->
+                <a href="{{ url_for('view_photo', id=photo.id) }}">
+                    <img src="{{ url_for('serve_image', id=photo.id) }}" alt="{{ photo.name }}">
+                </a>
+                <div>
+                    <strong><a href="{{ url_for('view_photo', id=photo.id) }}">{{ photo.name }}</a></strong><br>
+                    <small>Feltöltötte: {{ photo.uploader.username }} | {{ photo.upload_date.strftime('%Y-%m-%d %H:%M') }}</small>
+                </div>
             </div>
             
             {% if current_user.is_authenticated and current_user.id == photo.user_id %}
