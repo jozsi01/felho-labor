@@ -10,7 +10,7 @@ Ez egy egyszerű, könnyűsúlyú Python és Flask alapú webalkalmazás, amely 
   * Név szerint (A-Z és Z-A)
   * Feltöltési dátum szerint (legújabb vagy legrégebbi elöl)
 * **Megtekintés:** A listában a kép nevére kattintva a fotó eredeti méretben megtekinthető.
-* **Törlés:** Képek végleges törlése (mind az adatbázisból, mind a szerver háttértáráról).
+* **Törlés:** Képek végleges törlése.
 
 ## ☁️ Deployment
 
@@ -26,7 +26,6 @@ A backend a Render infrastruktúráján fut, és egy külön PostgreSQL adatbáz
 
 * **Backend:** Python 3, Flask
 * **Adatbázis:** PostgreSQL (Flask-SQLAlchemy ORM)
-* **Frontend:** HTML5, CSS, Jinja2 sablonmotor
 * **Deployment:** Render (PaaS)
 
 ## ⚙️ Környezeti változók
